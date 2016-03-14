@@ -11,7 +11,7 @@ public class Player {
     public static final int MAX_LEFT=10;  //ограничение по ходу влево
     public static final int MAX_RIGHT=280;  //ограничение по ходу вправо
     
-    Image img = new ImageIcon("resource/player.png").getImage();  //загрузка картинки машины
+    Image img = new ImageIcon("resource/player_cut.png").getImage();  //загрузка картинки машины
     
     public Rectangle getRect(){
         return new Rectangle(x, y, 73, 164);

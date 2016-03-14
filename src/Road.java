@@ -51,13 +51,24 @@ public class Road extends JPanel implements ActionListener, Runnable{
         g.drawImage(p.img, p.x, p.y, null);
         
         Iterator<Enemy> i = enemies.iterator();  //пробег по списку препятствий
+        Iterator<Enemy> j = enemies.iterator();
+        boolean emptyPlace=true;
         while(i.hasNext()){
             Enemy e= i.next();
             if(e.y>=640||e.y<=-640){ //удаление из списка при выходе за границы поля
                 i.remove();
             }else{
                 e.move();
-                g.drawImage(e.img, e.x, e.y, null);  //прорисовка препятствия
+                while(j.hasNext()){
+                    Enemy newEnemy = j.next();
+                    if(newEnemy.getRect().intersects(e.getRect())&&e!=newEnemy){
+                        emptyPlace=false;
+                    }
+                }
+                System.out.println("emptyPlace? "+ emptyPlace);
+                if(!e.getRect().intersects(p.getRect())&&emptyPlace){
+                    g.drawImage(e.img, e.x, e.y, null);  //прорисовка препятствия
+                }
             } 
         }
     }

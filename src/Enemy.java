@@ -9,7 +9,7 @@ public class Enemy {
     int x;
     int y;
     int speed;
-    Image img = new ImageIcon("resource/enemy.png").getImage();
+    Image img = new ImageIcon("resource/enemy_cut.png").getImage();
     Road road;
     
     public Rectangle getRect(){
