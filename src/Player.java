@@ -1,4 +1,5 @@
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
@@ -11,6 +12,10 @@ public class Player {
     public static final int MAX_RIGHT=280;  //ограничение по ходу вправо
     
     Image img = new ImageIcon("resource/player.png").getImage();  //загрузка картинки машины
+    
+    public Rectangle getRect(){
+        return new Rectangle(x, y, 73, 164);
+    }
     
     int speed=0; //скорость
     int acceleration=0;  //ускорение
@@ -51,10 +56,10 @@ public class Player {
             acceleration=-1;
         }
         if(key==KeyEvent.VK_LEFT){
-            dx=5;
+            dx=10;
         }
         if(key==KeyEvent.VK_RIGHT){
-            dx=-5;
+            dx=-10;
         }
     }
     //обработка событий отпускания клавиш
