@@ -6,11 +6,11 @@ public class main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        JFrame f=new JFrame("Java racing");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setSize(370, 640);
-        f.add(new Road());
-        f.setVisible(true);
+        JFrame frame = new JFrame("Java racing");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(370, 640);
+        frame.add(new Road());
+        frame.setVisible(true);
         
     }
     

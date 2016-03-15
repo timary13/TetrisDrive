@@ -9,22 +9,22 @@ public class Enemy {
     int x;
     int y;
     int speed;
-    Image img = new ImageIcon("resource/enemy_cut.png").getImage();
+    Image img = new ImageIcon ("resource/enemy_cut.png").getImage();
     Road road;
     
     public Rectangle getRect(){
-        return new Rectangle(x, y, 87, 178);
+        return new Rectangle(x, y, 80, 170);
     }
     
-    public Enemy(int x, int y, int speed, Road road){ //конструктор
+    public Enemy (int x, int y, int speed, Road road){ //конструктор
         this.x=x;
         this.y=y;
-        this.speed=speed;
-        this.road=road;
+        this.speed = speed;
+        this.road = road;
     }
     
     public void move(){
-        y=y-road.p.speed+speed;
+        y=y+speed-road.player.speed;
     }
-    
+   
 }
