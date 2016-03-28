@@ -21,6 +21,7 @@ public class Enemy {
         this.y=y;
         this.speed = speed;
         this.road = road;
+        System.out.println("speed of enemy="+speed);
     }
     
     public void move(){

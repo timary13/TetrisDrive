@@ -57,21 +57,21 @@ public class Road extends JPanel implements ActionListener, Runnable{
             if((nextEnemy.y >= 640)||(nextEnemy.y <= -640)){ //удаление из списка при выходе за границы поля
                 i.remove();
             }else{
-                nextEnemy.move();
-                  emptyPlace=true;
-//                j = enemies.iterator();
-//                int f=0;//
-//                while(j.hasNext()){
-//                    f++;
-//                    System.out.println("size="+enemies.size()+" f="+f);
-//                    Enemy newEnemy = j.next();
-//                    if(newEnemy.getRect().intersects(nextEnemy.getRect())&&nextEnemy!=newEnemy){
-//                        emptyPlace=false;
-//                    }
-//                }
+                emptyPlace=true;
+                j = enemies.iterator();
+                while(j.hasNext()){
+                    Enemy newEnemy = j.next();
+                    if(newEnemy.getRect().intersects(nextEnemy.getRect())&&nextEnemy!=newEnemy){ //пересекает другого соперника кроме себя?
+                        emptyPlace=false;
+                        System.out.println("emptyPlace="+emptyPlace);
+                    }
+                }
                 //System.out.println("emptyPlace? "+ emptyPlace);
-                if( (!nextEnemy.getRect().intersects(player.getRect())) && emptyPlace){
+                if( (!nextEnemy.getRect().intersects(player.getRect()))){ //пересекает игрока?
+                    System.out.println("emptyPlace="+emptyPlace);
+                    nextEnemy.move();
                     graphic.drawImage(nextEnemy.img, nextEnemy.x, nextEnemy.y, null);  //прорисовка препятствия
+                    
                 }
             } 
         }
@@ -80,6 +80,7 @@ public class Road extends JPanel implements ActionListener, Runnable{
     public void actionPerformed(ActionEvent event){
         player.move();  //обновление движения игрока
         repaint(); //перерисовка соперников
+        //System.out.println(enemies.size());
         testCollisionWithEnemies();
     }
     
@@ -101,7 +102,7 @@ public class Road extends JPanel implements ActionListener, Runnable{
             Random rand = new Random();
             try{
                 Thread.sleep(rand.nextInt(2000));
-                enemies.add(new Enemy(rand.nextInt(280),-510, -10,this));  //создание препятсвий и закидывание их в ArrayList
+                enemies.add(new Enemy(rand.nextInt(280),-510, -rand.nextInt(40)-10,this));  //создание препятсвий и закидывание их в ArrayList
             }catch(InterruptedException exception){
                 exception.printStackTrace();
             }
