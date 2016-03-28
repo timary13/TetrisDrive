@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 
+
+
 public class Road extends JPanel implements ActionListener, Runnable{
     
     Timer mainTimer = new Timer (20,this);  //каждые 20 мс запуск ф-и в объекте Road
