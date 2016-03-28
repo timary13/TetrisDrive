@@ -1,4 +1,5 @@
-# UUID       	Group Name
+# UUID                 	Group Name
 #
-user:alex-pat	user/Alexander Pateenok (alex-pat)
-user:timary13	user/Marina Titova (timary13)
+global:Registered-Users	Registered Users
+user:alex-pat          	user/Alexander Pateenok (alex-pat)
+user:timary13          	user/Marina Titova (timary13)
