@@ -1,3 +1,5 @@
+package tetrisDrive;
+
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -6,12 +8,30 @@ import javax.swing.ImageIcon;
 
 
 public class Player {
-    //объявление констант
-    public static final int MAX_SPEED = -40; //ограничение по максимальной скорости
-    public static final int MAX_LEFT = 10;  //ограничение по ходу влево
-    public static final int MAX_RIGHT = 280;  //ограничение по ходу вправо
+    /**объявление констант*/
+    public static final int MAX_SPEED = -40; /**ограничение по максимальной скорости*/
+    public static final int MAX_LEFT = 10;  /**ограничение по ходу влево*/
+    public static final int MAX_RIGHT = 280;  /**ограничение по ходу вправо*/
     
-    Image img = new ImageIcon ("resource/player_cut.png").getImage();  //загрузка картинки машины
+    Image img = new ImageIcon ("resource/player_cut.png").getImage();  /**загрузка картинки машины*/
+    
+    String fileBrake = "resource/brake.mp3";
+    AudioThread brake = new AudioThread(fileBrake);
+    String fileGainSpeed = "resource/gainSpeed.mp3";
+    AudioThread gainSpeed = new AudioThread(fileGainSpeed);
+    
+    Thread audioBrake;
+    Thread audioGainSpeed;
+    
+    FileWorker logFile = new FileWorker("logs/log.txt");
+    StringBuffer sb = new StringBuffer();
+    
+    public void saveLog(boolean win){
+        if(win) sb.append("5");
+        else sb.append("0");
+       logFile.addText(sb.toString()); 
+    }
+    
     
     public Rectangle getRect(){
         return new Rectangle(x, y, 70, 160);
@@ -31,12 +51,12 @@ public class Player {
     public void move(){
         lengthRoad += speed;
         speed -= acceleration;
-        if (speed >= 0) speed = 0;  //если скорость станет отрицательной - остановка
+        if (speed >= 0) speed = 0;  /**если скорость станет отрицательной - остановка*/
         if (speed <= MAX_SPEED) speed = MAX_SPEED;  //чтобы скорость не превышала предельную
         x -= dx;
         if (x <= MAX_LEFT) x = MAX_LEFT;
         if (x >= MAX_RIGHT) x = MAX_RIGHT;
-        //закцикленная "дорога"
+        /**закцикленная "дорога"*/
         if (layer2 + speed >= 0){
             layer1 = 0;
             layer2 =- 640;
@@ -46,23 +66,31 @@ public class Player {
         }
     }
     
-    //обработка событий нажатия клавиш
+    /**обработка событий нажатия клавиш*/
     public void keyPressed (KeyEvent event){
         int key = event.getKeyCode();
         if (key == KeyEvent.VK_UP){
+            audioGainSpeed = new Thread(gainSpeed);
+            audioGainSpeed.start();
             acceleration = 1;
+            sb.append("1");
         }
         if (key == KeyEvent.VK_DOWN){
+            audioBrake = new Thread( brake);
+            audioBrake.start();
             acceleration = -1;
+            sb.append("3");
         }
         if (key == KeyEvent.VK_LEFT){
             dx = 10;
+            sb.append("4");
         }
         if (key == KeyEvent.VK_RIGHT){
             dx =- 10;
+            sb.append("2");
         }
     }
-    //обработка событий отпускания клавиш
+    /**обработка событий отпускания клавиш*/
     public void keyReleased (KeyEvent event){
         int key = event.getKeyCode();
         if ((key == KeyEvent.VK_UP) || (key == KeyEvent.VK_DOWN)){
@@ -74,3 +102,4 @@ public class Player {
     }
     
 }
+

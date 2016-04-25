@@ -1,3 +1,5 @@
+package tetrisDrive;
+
 
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -16,12 +18,12 @@ public class Enemy {
         return new Rectangle(x, y, 80, 170);
     }
     
-    public Enemy (int x, int y, int speed, Road road){ //конструктор
+    public Enemy (int x, int y, int speed, Road road){ /**конструктор*/
         this.x=x;
         this.y=y;
         this.speed = speed;
         this.road = road;
-        System.out.println("speed of enemy="+speed);
+        //System.out.println("speed of enemy="+speed);
     }
     
     public void move(){
