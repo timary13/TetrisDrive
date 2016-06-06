@@ -3,6 +3,7 @@ package tetrisDrive;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+//import java.io.FileNotFoundException;
 
 import javax.swing.ImageIcon;
 
@@ -14,6 +15,7 @@ public class Player {
     public static final int MAX_RIGHT = 280;  /**ограничение по ходу вправо*/
     
     Image img = new ImageIcon ("resource/player_cut.png").getImage();  /**загрузка картинки машины*/
+    String[] logsEnemy;
     
     String fileBrake = "resource/brake.mp3";
     AudioThread brake = new AudioThread(fileBrake);
@@ -23,16 +25,29 @@ public class Player {
     Thread audioBrake;
     Thread audioGainSpeed;
     
-    FileWorker logFile = new FileWorker("logs/log.txt");
+    FileWorker logFile = new FileWorker("");
     StringBuffer sb = new StringBuffer();
     
-    public void saveLog(boolean win){
-        if(win) sb.append("5");
-        else sb.append("0");
-       logFile.addText(sb.toString()); 
+    public void saveLog(boolean win) { //передачу параметра пересмотреть throws FileNotFoundException
+    	logFile.addText(getRect(), Integer.toString(speed));
+    }
+  
+    
+    public String getFileName(){
+  	  return logFile.getNameFile();
     }
     
+    public void openF(){
+    	logFile.openFile();
+    }
     
+    public void closeF(String str){
+    	logFile.addString("\n");
+    	logFile.addString(str);
+    	logFile.closeFile();
+    }
+    
+      
     public Rectangle getRect(){
         return new Rectangle(x, y, 70, 160);
     }
@@ -101,5 +116,8 @@ public class Player {
         }
     }
     
+    public String getNameClass(){
+    	return (new String("Player"));
+    }
 }
 

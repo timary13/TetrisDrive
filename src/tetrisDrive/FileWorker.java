@@ -1,17 +1,24 @@
 package tetrisDrive;
 
+import java.awt.Rectangle;
 import java.io.*;
+import java.nio.file.Files;
 
 
 public class FileWorker {
     
     static String nameFile;
+    StringBuffer sb = new StringBuffer();
+    File file;
+    BufferedReader in;
+    BufferedReader inCopy;
     
     public FileWorker(String fileName) {  
-        
-        nameFile = fileName;
+    	if(fileName == "")
+    		nameFile = getListOfFiles();
+    	else nameFile = fileName;
             //Определяем файл
-        File file = new File(nameFile);
+        file = new File(nameFile);
 
         try {
             //проверяем, что если файл не существует то создаем его
@@ -22,47 +29,115 @@ public class FileWorker {
             throw new RuntimeException(e);
         }
     }
+
+    public void openFile() {//throws FileNotFoundException 
+    	
+    	try{
+    		in = new BufferedReader(new FileReader( file.getAbsoluteFile()));
+    	}catch(IOException e) {
+            throw new RuntimeException(e);
+        	}
+    }
     
-    public static void addText(String text){
+    public void closeFile() {
+    	try{
+    		in.close();
+    	}catch(IOException e) {
+            throw new RuntimeException(e);
+        	}
+    }
+    
+    public void addText(Rectangle rect, String _speed) {
+    	
+    	String str = new String( Integer.toString(rect.x) + " " + Integer.toString(rect.y) +" " + _speed + "\n");
+    	
         try{
             FileWriter sw = new FileWriter(nameFile,true);
-            sw.write(text+"\n");
+            sw.write(str);
+            sw.close();
+        }catch(Exception e){
+           System.out.print(e.getMessage());
+       } 
+    }
+    
+    public void addString(String str) {
+    	
+    	sb.append(str+"\n");
+    	
+        try{
+            FileWriter sw = new FileWriter(nameFile,true);
+            sw.write(sb.toString());
             sw.close();
         }catch(Exception e){
            System.out.print(e.getMessage());
        }  
     }
     
-    public static String read() throws FileNotFoundException {
+    public String readAllInString() { //read all
         //Этот спец. объект для построения строки
         StringBuilder sb = new StringBuilder();
-
-        File file = new File(nameFile);
-        if (!file.exists()){
-            throw new FileNotFoundException(file.getName());
-        }
-
-        try {
-            //Объект для чтения файла в буфер
-            BufferedReader in = new BufferedReader(new FileReader( file.getAbsoluteFile()));
-            try {
-                //В цикле построчно считываем файл
-                String s;
-                while ((s = in.readLine()) != null) {
-                    sb.append(s);
-                    sb.append("\n");
-                }
-            } finally {
-                //Также не забываем закрыть файл
-                in.close();
-            }
+        String s;
+        try{
+        	s = inCopy.readLine();
+            sb.append(s);
+            sb.append("\n");
         } catch(IOException e) {
             throw new RuntimeException(e);
-        }
+        	}
 
-        //Возвращаем полученный текст с файла
-        return sb.toString();
+        return sb.toString();    	
     }
-       
     
+    public Rectangle readPosition() {
+    	Rectangle pos = new Rectangle();
+        String str;
+        try{
+        	str = in.readLine();
+        	String[] retval = str.split(" ", 2);
+    		pos.x = Integer.valueOf(retval[0]);
+			pos.y = Integer.valueOf(retval[1]);
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        	}
+        return pos;
+    }
+  
+    public String getListOfFiles(){
+    	
+        String files[] = new File("./logs").list();
+        
+        String newName = "logs/log"+(files.length+1)+".txt";
+        
+        for (int i=0; i<files.length;i++){
+        	String s = files[i].toString();
+        	String[] retval = s.split("-", 0);
+        	if(retval.length == 1){
+        		String nameDelFile = "logs/" + s;
+        		File delFile = new File(nameDelFile);
+        		if(delFile.delete())
+        			System.out.println("delete file "+ nameDelFile);
+        	}		
+        }
+        
+        return newName;
+    }
+    
+    public void renameLog(String result) {
+    	String[] retval = nameFile.split("\\.", 0);
+    	String resultNewNameFile = new String(retval[0] + "-" + result +  "." + retval[1]);
+    	
+    	File newFile = new File(resultNewNameFile);
+        try {
+			Files.copy(file.toPath(), newFile.toPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+    }
+    
+    
+    public String getNameFile(){
+    	return nameFile;
+    }
+  
 }

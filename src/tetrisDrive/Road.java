@@ -31,8 +31,8 @@ public class Road extends JPanel implements ActionListener, Runnable{
     Thread enemiesFactory = new Thread(this);  /**создаем поток ||программе*/
    List<Enemy> enemies = new ArrayList<Enemy>();  /**создали коллекцию(список)*/
    
-    //Player player = new Player();
-    Robot player = new Robot(enemies);/////////////////////////////////////////////////////////////////////////!  
+    Player player = new Player();
+    //Robot player = new Robot(enemies);/////////////////////////////////////////////////////////////////////////!  
     
    String fileStarter = "resource/starter.mp3";
    Thread audioStarter = new Thread( new AudioThread(fileStarter));
@@ -107,6 +107,8 @@ public class Road extends JPanel implements ActionListener, Runnable{
     public void actionPerformed(ActionEvent event){
         player.move();  /**обновление движения игрока*/
         repaint(); /**перерисовка соперников*/
+        player.saveLog(); /**сохранение координат игрока*/
+        //сохранить логи для соперников: создать пробег по коллекции и вызывать saveLog
         testCollisionWithEnemies();
         testWin();
     }

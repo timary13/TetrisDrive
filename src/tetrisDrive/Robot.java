@@ -15,7 +15,7 @@ import javax.swing.Timer;
 
 public class Robot extends Player implements  ActionListener, Runnable{
   
-  Timer secondaryTimer = new Timer(40, this); //30
+  Timer secondaryTimer = new Timer(30, this); //30
   Thread bot = new Thread (this);
   
   /**объявление констант*/
@@ -24,6 +24,7 @@ public class Robot extends Player implements  ActionListener, Runnable{
   public static final int MAX_RIGHT = 280;  //ограничение по ходу вправо
   
   Image img = new ImageIcon ("resource/player_cut.png").getImage();  /**загрузка картинки машины*/
+  String[] logsEnemy;
   
   String fileBrake = "resource/brake.mp3";
   AudioThread brake = new AudioThread(fileBrake);
@@ -66,21 +67,24 @@ public class Robot extends Player implements  ActionListener, Runnable{
   int loopLeft;
   
   StringBuffer sb = new StringBuffer();
+  FileWorker logFile;
   
   public Robot(List<Enemy> _enemies){
-      FileWorker logFile = new FileWorker("logs/log.txt");
+      logFile = new FileWorker("");
       loopRight = 0;
       loopLeft  = 0;
       
-      enemies = _enemies;
+      enemies = _enemies;//
       secondaryTimer.start();
       bot.start();
   }
   
-  public void saveLog(boolean win){
-      if(win) sb.append("5");
-      else sb.append("0");
-     logFile.addText(sb.toString()); 
+  public String getFileName(){
+	  return logFile.getNameFile();
+  }
+  
+  public void saveLog() {
+     logFile.addText(getRect(), Integer.toString(speed)); 
   }
   
   public void move(){
@@ -99,11 +103,13 @@ public class Robot extends Player implements  ActionListener, Runnable{
           layer1 -= speed;
           layer2 -= speed;
       }
+      System.out.println("speed="+speed);
   }
   
   
   public void actionPerformed(ActionEvent event){
       testChanceCollision();
+      saveLog();
   }
   
    public void testChanceCollision(){
@@ -112,28 +118,23 @@ public class Robot extends Player implements  ActionListener, Runnable{
           Enemy enemy = i.next();
           if(getUpRect().intersects(enemy.getRect())){ /**если прямоуголиник пересекаются*/
               speed += 10; //уменьшаем скорость
-              sb.append("3");
               if (testLeftFree() && loopLeft == 0) {
                   x -= 70;
-                  sb.append("4");
                   if(loopRight > 0)
                   loopLeft++;
               }
                   else if (testRightFree() && loopRight <= 2){
                       x += 70;
-                      sb.append("2");
                       loopRight++;
                   }
                       else {
                       speed += 10;
-                      sb.append("3");
                       loopLeft = 0;
                       loopRight = 0;
                   }
           }
           else {
               speed -= 1; //ускоряемся
-              if (speed > MAX_SPEED+20) sb.append("1");
           }  
       }
   }
@@ -143,7 +144,6 @@ public class Robot extends Player implements  ActionListener, Runnable{
       while(i.hasNext()){
           Enemy enemy=i.next();
           if(getLeftRect().intersects(enemy.getRect())){ /**если прямоуголиник пересекаются*/
-              //System.out.println("Left not free");
               return false;
           }  
       }
@@ -156,7 +156,6 @@ public class Robot extends Player implements  ActionListener, Runnable{
       while(i.hasNext()){
           Enemy enemy=i.next();
           if(getRightRect().intersects(enemy.getRect())){ /**если прямоуголиник пересекаются*/
-              //System.out.println("Right not free");
               return false;
           } 
       }
@@ -167,10 +166,15 @@ public class Robot extends Player implements  ActionListener, Runnable{
   @Override
   public void run(){ /**точка входа в поток*/
       try{
-          Thread.sleep(2000);
+          Thread.sleep(0);
       }catch(InterruptedException exception){
           exception.printStackTrace();
       }
   }
+  
+  public String getNameClass(){
+  	return (new String("Robot"));
+  }
+  
 }
 
